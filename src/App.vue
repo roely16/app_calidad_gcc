@@ -1,5 +1,5 @@
 <template>
-  	<v-app id="inspire">
+	<v-app id="inspire">
 
 		<!-- Drawer -->
 		<v-navigation-drawer
@@ -132,7 +132,7 @@
 		<v-content>
 			<router-view/>
 		</v-content>
-  	</v-app>
+	</v-app>
 </template>
 
 <script>
@@ -141,40 +141,13 @@ export default {
   name: 'App',
 
   data: () => ({
-    dialog: false,
-      	drawer: false,
-      	items: [
+	dialog: false,
+		drawer: false,
+		items: [
 			{ icon: 'mdi-monitor-dashboard', text: 'Dashboard', to: '/' },
 			{ icon: 'mdi-file-document-box-check', text: 'Control de Calidad', to: '/calidad' },
-			// { icon: 'mdi-content-copy', text: 'Duplicates' },
-			// {
-			// icon: 'mdi-chevron-up',
-			// 'icon-alt': 'mdi-chevron-down',
-			// text: 'Labels',
-			// model: true,
-			// children: [
-			// 	{ icon: 'mdi-plus', text: 'Create label' },
-			// ],
-			// },
-			// {
-			// icon: 'mdi-chevron-up',
-			// 'icon-alt': 'mdi-chevron-down',
-			// text: 'More',
-			// model: false,
-			// children: [
-			// 	{ text: 'Import' },
-			// 	{ text: 'Export' },
-			// 	{ text: 'Print' },
-			// 	{ text: 'Undo changes' },
-			// 	{ text: 'Other contacts' },
-			// ],
-			// },
-			// { icon: 'mdi-settings', text: 'Settings' },
-			// { icon: 'mdi-message', text: 'Send feedback' },
-			// { icon: 'mdi-help-circle', text: 'Help' },
-			// { icon: 'mdi-cellphone-link', text: 'App downloads' },
-			// { icon: 'mdi-keyboard', text: 'Go to the old version' },
-      	],
-  	}),
+			{ icon: 'mdi-file-document-box-check', text: 'Reportes', to: '/reportes' },
+		],
+	}),
 };
 </script>

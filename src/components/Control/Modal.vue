@@ -12,11 +12,7 @@
                 <v-toolbar-title>{{ item.DOCUMENTO }} - {{ item.ANIO }}</v-toolbar-title>
                 <template v-slot:extension>
                     <v-tabs dark background-color="primary" v-model="tab">
-                        <!-- <v-tab>
-                            <v-icon left>mdi-information</v-icon>
-                            Detalle
-                        </v-tab> -->
-
+                        
                         <v-tab >
                             <v-icon left>mdi-check-all</v-icon>
                             Calidad
@@ -44,26 +40,63 @@
                         <v-card  flat>
                             <v-card-text style="padding-top: 0px">
                                 
+                                <!-- Mostrar el detalle de los diferentes controles de calidad -->
+
                                 <v-row v-if="detalle_acierto" justify="center" align="center">
                                     <v-col cols="8">
-                                        <v-alert v-for="(acierto, key) in detalle_acierto" :key="key" border="top" colored-border elevation="2" class="mt-4" type="info">
-                                            El expediente ha cumplido con los criterios de calidad correspondientes a la FASE {{ key + 1 }} en fecha {{ acierto.FECHA }}
-                                        </v-alert>
+
+                                        <v-expansion-panels focusable accordion>
+                                            <v-expansion-panel
+                                                v-for="(acierto, key) in detalle_acierto" 
+                                                :key="key" 
+                                            >
+                                                <v-expansion-panel-header>
+                                                    <v-row justify="center">
+                                                        <v-col cols="1">
+                                                            <v-icon color="success" large>
+                                                                mdi-check
+                                                            </v-icon> 
+                                                        </v-col>
+                                                        <v-col cols="11">
+                                                            <span class="overline">
+                                                                El expediente ha cumplido con los criterios de calidad correspondientes a la FASE {{ key + 1 }} en fecha {{ acierto.FECHA }}
+                                                            </span>
+                                                        </v-col>
+                                                    </v-row>
+                                                    
+                                                </v-expansion-panel-header>
+                                                <v-expansion-panel-content>
+                                                    <v-row v-for="(criterio, key) in acierto.CRITERIOS" :key="key">
+                                                        <v-col cols="12">
+                                                            <strong>
+                                                                {{ criterio.NOMBRE }}
+                                                            </strong>
+                                                            
+                                                            <v-divider class="mt-2"></v-divider>
+                                                            <v-row>
+                                                                <v-col v-for="(item, key) in criterio.ITEMS" :key="key" cols="6">
+                                                                    <v-icon :color="item.NO_APLICA ? null : 'success'" size="20" class="mr-2">
+                                                                        {{ item.NO_APLICA ? 'mdi-circle-off-outline' : 'mdi-checkbox-marked' }}    
+                                                                    </v-icon>
+                                                                    <span :style="[item.NO_APLICA ? {'text-decoration' : 'line-through'} : null]">
+                                                                        {{ item.NOMBRE }}
+                                                                    </span>
+                                                                </v-col>
+                                                            </v-row>
+                                                        </v-col>
+                                                    </v-row>
+
+                                                </v-expansion-panel-content>
+                                            </v-expansion-panel>
+                                        </v-expansion-panels>
                                     </v-col>
                                 </v-row>
 
                                 <v-list-item v-for="(criterio, key) in criterios" :key="key">
                                     <v-list-item-content>
-                                        <!-- <div class="overline mb-4">OVERLINE</div> -->
                                         <v-list-item-title style="margin-top: 0px">
                                             <div class="title font-weight-black">{{ criterio.NOMBRE }}</div>
-                                            <!--
-                                            <v-checkbox :disabled="mode != 'edit'" style="margin-top: 0px" hide-details label="1.1 Periodo modificado correctamente" v-model="criterio.TODOS" @change="checkAll(criterio)" :indeterminate="criterio.INDETERMINATE" :error="criterio.INDETERMINATE">
-                                                <template v-slot:label>
-                                                    <div class="title font-weight-black">{{ criterio.NOMBRE }}</div>
-                                                </template>
-                                            </v-checkbox>
-                                            -->
+                                           
                                         </v-list-item-title>
                                         <v-container class="ml-6" fluid>
                                             <v-row dense>
@@ -195,47 +228,6 @@
                                 </v-col>
                             </v-row>
 
-                            <!-- <v-row>
-                                <v-col cols="12" v-for="(error, key) in errores"
-                                    :key="key">
-                                    <v-card>
-                                        <v-list  shaped expand>
-                                            <v-list-group
-                                                value="true"
-                                                color="error"
-                                            >
-                                                <template v-slot:activator>
-                                                    <v-list-item two-line>
-                                                        <v-list-item-avatar>
-                                                        <v-icon
-                                                            class="red white--text"
-                                                        >
-                                                            mdi-message-alert
-                                                        </v-icon>
-                                                        </v-list-item-avatar>
-                                                        <v-list-item-content>
-                                                            <v-list-item-title>{{ error.FECHA }}</v-list-item-title>
-                                                            <v-list-item-subtitle>{{ error.USUARIO }}</v-list-item-subtitle>
-                                                        </v-list-item-content>
-                                                    </v-list-item>
-                                                </template>
-                                                <v-list-item
-                                                    v-for="(error, i) in error.DETALLE"
-                                                    :key="i"
-                                                    link
-                                                >
-                                                    <template v-slot:default="{ active, toggle }">
-                                                        <v-list-item-content class="ml-5">
-                                                            <v-list-item-title>{{ error.NOMBRE }}</v-list-item-title>
-                                                        </v-list-item-content>
-                                                    </template>
-                                                </v-list-item>
-
-                                            </v-list-group>
-                                        </v-list>
-                                    </v-card>
-                                </v-col>
-                            </v-row> -->
                         </v-container>
                     </v-tab-item>
 
