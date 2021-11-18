@@ -113,8 +113,12 @@
                     {{ criterio != '2' ? criterio : '-' }}
                   </td>
 
-                  <td>0</td>
-                  <td>Aceptado</td>
+                  <td>
+                    {{ row_item.ERRORES }}
+                  </td>
+                  <td>
+                    {{ row_item.RESULTADO }}
+                  </td>
                   <td>{{ row_item.ENCARGADO_CALIDAD }}</td>
                 </tr>
               </table>
