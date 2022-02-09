@@ -109,7 +109,7 @@
                   <td>{{ row_item.FECHA_FINALIZACION }}</td>
 
                   <!-- Criterios -->
-                  <td v-for="(criterio, key) in row_item.CRITERIOS" :key="key">
+                  <td :style="criterio == '1' ? 'color: red' : null" v-for="(criterio, key) in row_item.CRITERIOS" :key="key">
                     {{ criterio != '2' ? criterio : '-' }}
                   </td>
 
@@ -232,12 +232,19 @@ export default {
 			CellDef: { styles: { cellWidth: "auto" } },
 			theme: "plain",
 			styles: {
-			fontSize: 5,
-			cellWidth: "auto",
-			lineWidth: 0.1,
-			halign: "center",
+        fontSize: 4.5,
+        cellWidth: "auto",
+        lineWidth: 0.1,
+        halign: "center",
 			},
 			columnStyles: { 3: { minCellWidth: 20 }, 4: { minCellWidth: 20 } },
+      didParseCell: (data) => {
+        
+        if (data.cell.text[0] == '1') {
+          data.cell.styles.textColor = "red";  
+        }
+        
+      },
 		});
 
 		doc.save("Reporte " + this.date + ".pdf");

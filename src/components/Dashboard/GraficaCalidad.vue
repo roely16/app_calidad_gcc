@@ -37,10 +37,12 @@
                 </v-col>
             </v-row>
         </v-container>    
+
     </v-card>
 </template>
 
 <script>
+
     export default {
         data(){
             return{
@@ -76,8 +78,10 @@
                             dataLabels: {
                                 enabled: true,
                                 format: '{point.y}'
-                            }
+                            },
+                            
                         }
+                        
                     },
                     tooltip: {
                         headerFormat: '<span style="font-size:11px">{series.name}</span><br>',

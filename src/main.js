@@ -17,8 +17,11 @@ Vue.use(HighchartsVue)
 // Axios
 import axios from 'axios'
 import VueAxios from 'vue-axios'
- 
+
 Vue.use(VueAxios, axios)
+
+import LottieAnimation from 'lottie-web-vue'
+Vue.use(LottieAnimation)
 
 Vue.config.productionTip = false
 

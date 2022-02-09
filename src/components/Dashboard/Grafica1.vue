@@ -45,13 +45,31 @@
                 </v-row>
             </v-container>
         </v-card>
+
+         <Modal :width="800">
+            <template #content>
+                <DetalleErrores />
+            </template>
+        </Modal>
+
     </div>
 </template>
 
 <script>
+
+    import Modal from '@/components/Modal'
+    import DetalleErrores from '@/components/Dashboard/DetalleErrores'
+
+    import { mapMutations, mapActions } from "vuex"
+
     export default {
+        components: {
+            Modal,
+            DetalleErrores
+        },
         data(){
             return{
+                self: this,
                 chartOptions: {
                     chart: {
                         plotBackgroundColor: null,
@@ -82,9 +100,7 @@
                         }
                     },
                     legend: {
-                        // align: 'right',
-                        // layout: 'vertical',
-                        // verticalAlign: 'middle',
+                       
                         labelFormatter: function(){
                             return this.name + ': ' + this.y
                         }
@@ -92,7 +108,20 @@
                     series: [{
                         name: 'Expedientes',
                         colorByPoint: true,
-                        data: []
+                        data: [],
+                        point: {
+                            events: {
+                                click: (point) => {
+                                    // eslint-disable-next-line no-console
+                                    console.log(point.point.name)
+                                    
+                                    if (point.point.name === 'Rechazados') {
+                                        this.setShow(true)
+                                        this.fetchRejected(this.date)
+                                    }
+                                }
+                            }
+                        }
                     }],
                     credits: {
                         enabled: false
@@ -104,6 +133,12 @@
             }
         },
         methods: {
+             ...mapMutations({
+                setShow: 'modal/setShow'
+            }),
+            ...mapActions({
+                fetchRejected: 'dashboard/fetchRejected'
+            }),
             getData(){
 
                 this.isLoading = true

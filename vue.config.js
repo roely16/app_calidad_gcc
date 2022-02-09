@@ -3,7 +3,7 @@ module.exports = {
     "vuetify"
   ],
   publicPath: process.env.NODE_ENV === 'production'
-  ? '/catastro/GestionServicios/apps/app_calidad_gcc/'
+  ? '/GestionServicios/apps/app_calidad_gcc/'
   : '/',
   pwa: {
     workboxOptions: {
