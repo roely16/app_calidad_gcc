@@ -1,173 +1,276 @@
 <template>
-  <div>
-    <v-container fluid>
-      <v-row no-gutters>
-        <v-col md="3" class="text-left">
-          <v-btn icon>
-            <v-menu
-              ref="menu"
-              v-model="menu"
-              :close-on-content-click="false"
-              :return-value.sync="date"
-              transition="scale-transition"
-              offset-y
-              min-width="290px"
-            >
-              <template v-slot:activator="{ on }">
-                <v-icon v-on="on">mdi-calendar</v-icon>
-              </template>
-              <v-date-picker
-                v-model="date"
-                :show-current="false"
-                type="month"
-                scrollable
-              >
-                <v-spacer></v-spacer>
-                <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-                <v-btn text color="primary" @click="changeDate">OK</v-btn>
-              </v-date-picker>
-            </v-menu>
-          </v-btn>
+	<div>
+		<v-container fluid>
+			<v-row no-gutters>
+				<v-col cols="12" md="8" class="text-left">
+					<v-btn icon>
+						<v-menu
+						ref="menu"
+						v-model="menu"
+						:close-on-content-click="false"
+						:return-value.sync="date"
+						transition="scale-transition"
+						offset-y
+						min-width="290px"
+						>
+						<template v-slot:activator="{ on }">
+							<v-icon v-on="on">mdi-calendar</v-icon>
+						</template>
+						<v-date-picker
+							v-model="date"
+							:show-current="false"
+							type="month"
+							scrollable
+						>
+							<v-spacer></v-spacer>
+							<v-btn text color="primary" @click="menu = false">Cancel</v-btn>
+							<v-btn text color="primary" @click="changeDate">OK</v-btn>
+						</v-date-picker>
+						</v-menu>
+					</v-btn>
 
-          <v-btn icon class="ml-2" @click="print_pdf()">
-            <v-icon>mdi-printer</v-icon>
-          </v-btn>
+					<v-btn icon class="ml-2" @click="print_pdf()">
+						<v-icon>mdi-printer</v-icon>
+					</v-btn>
 
-          <v-btn icon class="ml-2" @click="obtener_datos()">
-            <v-icon>mdi-refresh</v-icon>
-          </v-btn>
-        </v-col>
-      </v-row>
+					<v-btn icon class="ml-2" @click="obtener_datos()">
+						<v-icon>mdi-refresh</v-icon>
+					</v-btn>
+				</v-col>
 
-      <v-row v-if="isLoading">
-        <v-col class="text-center">
-          <v-progress-circular
-            :size="50"
-            indeterminate
-            color="primary"
-          ></v-progress-circular>
-        </v-col>
-      </v-row>
+				<v-col cols="4">
+					<v-text-field v-model="search" outlined hide-details placeholder="Buscar..."></v-text-field>
+				</v-col>
+			</v-row>
 
-      <div v-if="!isLoading" style="overflow-x: auto">
-        <div id="table-reporte">
-          <v-row justify="center" class="text-center" align="center">
-            <v-col md="6" align-self="center">
-              <table class="table">
-                <tr>
-                  <td class="logo">
-                    <v-img
-                      max-height="150"
-                      max-width="150"
-                      src="@/assets/logo_muni.png"
-                    ></v-img>
-                  </td>
-                  <td class="centro">
-                    <h3>RESULTADOS DE CONTROL DE CALIDAD</h3>
-                    <h4>{{ date }}</h4>
-                  </td>
-                  <td>
-                    <tr>
-                      <td class="codigo">
-                        <h5>CÓDIGO:</h5>
-                        <h5>RED-GCC-0006</h5>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="version">
-                        <h5>VERSIÓN:</h5>
-                        <h5>0003</h5>
-                      </td>
-                    </tr>
-                  </td>
-                </tr>
-              </table>
-            </v-col>
-          </v-row>
+			<div style="overflow-x: auto; display: none;">
+				<div id="table-reporte">
+				<v-row justify="center" class="text-center" align="center">
+					<v-col md="6" align-self="center">
+					<table class="table">
+						<tr>
+						<td class="logo">
+							<v-img
+							max-height="150"
+							max-width="150"
+							src="@/assets/logo_muni.png"
+							></v-img>
+						</td>
+						<td class="centro">
+							<h3>RESULTADOS DE CONTROL DE CALIDAD</h3>
+							<h4>{{ date }}</h4>
+						</td>
+						<td>
+							<tr>
+							<td class="codigo">
+								<h5>CÓDIGO:</h5>
+								<h5>RED-GCC-0006</h5>
+							</td>
+							</tr>
+							<tr>
+							<td class="version">
+								<h5>VERSIÓN:</h5>
+								<h5>0003</h5>
+							</td>
+							</tr>
+						</td>
+						</tr>
+					</table>
+					</v-col>
+				</v-row>
 
-          <v-row>
-            <v-col>
-              <table id="reporte" class="table_reporte text-center">
-                <tr v-for="(header, key) in headers" :key="key">
-                  <td
-                    :class="item.CLASS"
-                    :style="'min-width: ' + item.WIDTH"
-                    :colspan="item.COLSPAN"
-                    v-for="(item, key) in header"
-                    :key="key"
-                  >
-                    {{ item.TEXT }}
-                  </td>
-                </tr>
-                <tr v-for="(row_item, key) in items" :key="row_item.DOCUMENTO">
-                  <td>{{ key + 1 }}</td>
-                  <td>{{ row_item.USUARIO }}</td>
-                  <td>{{ row_item.FECHA_INGRESO }}</td>
-                  <!-- <td></td>
-									<td></td> -->
-                  <td>{{ row_item.DOCUMENTO }} - {{ row_item.ANIO }}</td>
-                  <td>{{ row_item.FECHA_FINALIZACION }}</td>
+				<v-row>
+					<v-col>
+					<table id="reporte" class="table_reporte text-center">
+						<tr v-for="(header, key) in headers" :key="key">
+						<td
+							:class="item.CLASS"
+							:style="'min-width: ' + item.WIDTH"
+							:colspan="item.COLSPAN"
+							v-for="(item, key) in header"
+							:key="key"
+						>
+							{{ item.TEXT }}
+						</td>
+						</tr>
+						<tr v-for="(row_item, key) in items" :key="row_item.DOCUMENTO">
+						<td>{{ key + 1 }}</td>
+						<td>{{ row_item.USUARIO }}</td>
+						<td>{{ row_item.REFERENCIA }}</td>
+						<!-- <td></td>
+											<td></td> -->
+						<td>{{ row_item.DOCUMENTO }} - {{ row_item.ANIO }}</td>
+						<td>{{ row_item.FECHA_FINALIZACION }}</td>
 
-                  <!-- Criterios -->
-                  <td :style="criterio == '1' ? 'color: red' : null" v-for="(criterio, key) in row_item.CRITERIOS" :key="key">
-                    {{ criterio != '2' ? criterio : '-' }}
-                  </td>
+						<!-- Criterios -->
+						<td :style="criterio == '1' ? 'color: red; font-weight: bold;' : null" v-for="(criterio, key) in row_item.CRITERIOS" :key="key">
+							{{ criterio != '2' ? criterio : '-' }}
+						</td>
 
-                  <td>
-                    {{ row_item.ERRORES }}
-                  </td>
-                  <td>
-                    {{ row_item.RESULTADO }}
-                  </td>
-                  <td>{{ row_item.ENCARGADO_CALIDAD }}</td>
-                </tr>
-              </table>
-            </v-col>
-          </v-row>
-        </div>
-      </div>
-    </v-container>
-  </div>
+						<td>
+							{{ row_item.ERRORES }}
+						</td>
+						<td :style="row_item.RESULTADO != 'ACEPTADO' ? 'color: red; font-weight: bold;' : null">
+							{{ row_item.RESULTADO }}
+						</td>
+						<td>{{ row_item.ENCARGADO_CALIDAD }}</td>
+						</tr>
+					</table>
+					</v-col>
+				</v-row>
+				</div>
+			</div>
+
+			<v-row justify="center" v-if="isLoading">
+				<v-col cols="6">
+					<Loading />
+				</v-col>
+			</v-row>
+
+			<v-row v-if="!isLoading">
+				<v-col>
+
+					<v-data-table
+						:items="items"
+						:headers="table_headers"
+						class="elevation-0"
+						single-expand
+						show-expand
+						item-key="COUNTER"
+						hide-default-footer
+						:page.sync="page"
+						:items-per-page="itemsPerPage"
+						@page-count="pageCount = $event"
+						:search="search"
+					>
+
+						<template v-slot:[`item.RESULTADO`]="item">
+							<v-chip :color="item.item.RESULTADO == 'ACEPTADO' ? 'success' : 'error' " label>
+								{{ item.item.RESULTADO }}
+							</v-chip>
+						</template>
+
+						<template v-slot:[`item.WF`]="item">
+							{{ item.item.DOCUMENTO }} - {{ item.item.ANIO }}
+						</template>
+
+						<template v-slot:expanded-item="{ item }">
+							<td colspan="100">
+
+								<v-row>
+									<v-col cols="3">
+										<v-chip label class="overline font-weight-bold">
+											Responsable: 
+										</v-chip>
+										<v-chip color="primary" class="ml-4" label>
+											{{ item.ENCARGADO_CALIDAD }}
+										</v-chip>
+									</v-col>
+
+									<v-divider class="mt-2 mb-2 mr-5" vertical></v-divider>
+									<v-col>
+										<v-chip label class="overline font-weight-bold">
+											Errores: 
+										</v-chip>
+										<v-chip :color="item.ERRORES > 0 ? 'error' : 'success'" class="ml-4" label>
+											{{ item.ERRORES }}
+										</v-chip>
+									</v-col>
+								</v-row>
+
+
+
+								<v-row>
+									<v-col v-for="(fase, key) in item.FASES" :key="key">
+										<v-card elevation="0" outlined min-height="200">
+											<v-card-title>
+												{{ fase.text }}
+											</v-card-title>
+											<v-card-text>
+												<v-row v-for="(categoria, key) in fase.items" :key="key">
+													<v-col cols="12">
+														<span style="cursor: pointer;" @click="categoria.EXPAND = !categoria.EXPAND" class="overline text-h2">
+															{{ categoria.NOMBRE }}
+														</span>
+														<v-divider></v-divider>
+													</v-col>
+													<v-col class="pb-0 pt-0" cols="12" v-for="(criterio, key) in categoria.CRITERIOS" :key="key">
+														<v-row dense>
+															<v-col cols="11">
+																<v-chip small label>
+																	{{ criterio.NOMBRE }}
+																</v-chip>
+															</v-col>
+															<v-col class="text-center" cols="1">
+																<v-chip label small :color="criterio.COLOR">
+																	{{ criterio.VALUE }}
+																</v-chip>
+															</v-col>
+														</v-row>
+													</v-col>
+												</v-row>
+												
+											</v-card-text>
+										</v-card>
+									</v-col>
+								</v-row>
+							</td>
+						</template>
+					</v-data-table>
+
+				</v-col>
+
+				<v-col cols="12">
+					<v-pagination
+						v-model="page"
+						:length="pageCount"
+						:total-visible="7"
+					></v-pagination>
+				</v-col>
+			</v-row>
+		
+		</v-container>
+	</div>
 </template>
 
 <style scoped>
-.table {
-  border-collapse: collapse;
-}
-.logo {
-  padding: 8px;
-  border: 1px solid #ddd;
-}
-.centro {
-  padding: 8px;
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
-  border-right: 1px solid #ddd;
-}
-.codigo {
-  padding: 8px;
-  border-top: 1px solid #ddd;
-  border-right: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
-}
-.version {
-  padding: 8px;
-  border-right: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
-}
+	.table {
+	border-collapse: collapse;
+	}
+	.logo {
+	padding: 8px;
+	border: 1px solid #ddd;
+	}
+	.centro {
+	padding: 8px;
+	border-top: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+	}
+	.codigo {
+	padding: 8px;
+	border-top: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	}
+	.version {
+	padding: 8px;
+	border-right: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	}
 
-.table_reporte tr td {
-  border-collapse: collapse;
-  padding: 4px;
-  border: 1px solid #ddd;
-}
-.table_reporte th {
-  position: -webkit-sticky;
-  position: sticky;
-  left: 0;
-  background: #fff;
-  border: 1px solid #ddd;
-}
+	.table_reporte tr td {
+	border-collapse: collapse;
+	padding: 4px;
+	border: 1px solid #ddd;
+	}
+	.table_reporte th {
+	position: -webkit-sticky;
+	position: sticky;
+	left: 0;
+	background: #fff;
+	border: 1px solid #ddd;
+	}
 </style>
 
 <script>
@@ -175,24 +278,35 @@
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 
+import Loading from '@/components/Animations/Loading'
+
 export default {
-  data() {
-    return {
-      date: new Date().toISOString().substr(0, 7),
-      menu: false,
-      modal: false,
-      breadcrumb: [
-        {
-          text: "Reportes",
-          disabled: true,
-          href: "breadcrumbs_dashboard",
-        },
-      ],
-      headers: [],
-      items: [],
-      isLoading: false,
-    };
-  },
+	components: {
+		Loading
+	},
+	data() {
+		return {
+			date: new Date().toISOString().substr(0, 7),
+			menu: false,
+			modal: false,
+			breadcrumb: [
+				{
+				text: "Reportes",
+				disabled: true,
+				href: "breadcrumbs_dashboard",
+				},
+			],
+			headers: [],
+			items: [],
+			isLoading: false,
+			table_headers: [],
+			expanded: [],
+			itemsPerPage: 10,
+			page: 1,
+			pageCount: null,
+			search: null
+		};
+	},
   methods: {
     changeDate() {
       this.$refs.menu.save(this.date);
@@ -213,6 +327,7 @@ export default {
         // eslint-disable-next-line no-console
         this.headers = response.data.response.result.headers;
         this.items = response.data.response.result.items;
+		this.table_headers = response.data.response.result.table_headers
 
         this.isLoading = false;
       });
