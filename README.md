@@ -1,4 +1,6 @@
-# app_calidad_liquidaciones
+# Control de Calidad Cuenta Corriente
+
+Aplicación para realizar el control de calidad del proceso de valor Cuenta Corriente.
 
 ## Project setup
 ```
